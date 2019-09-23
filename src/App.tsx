@@ -6,17 +6,15 @@ import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orien
 
 // @ts-ignore
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
-interface FileUploadProps {
-  readonly name: string;
-  // readonly size: number;
-}
+type FileUploadProps = {};
 
 export function FileUpload(props: FileUploadProps) {
-  const [files, setFiles] = React.useState<FileUploadProps[]>([]);
+  const [files, setFiles] = React.useState<File[]>([]);
 
   const handleInit = () => {
     console.log("FilePond instance has initialised", pondRef);
@@ -32,10 +30,8 @@ export function FileUpload(props: FileUploadProps) {
       maxFiles={6}
       server="/api"
       oninit={() => handleInit()}
-      onupdatefiles={(fileItems: FileUploadProps[]) =>
-        setFiles(
-          fileItems.map((fileItem: FileUploadProps) => fileItem.file.name)
-        )
+      onupdatefiles={(fileItems: File[]) =>
+        setFiles(fileItems.map((fileItem: any) => fileItem.file.name))
       }
     />
   );

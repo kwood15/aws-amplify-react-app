@@ -1,31 +1,25 @@
-import React, { useRef } from 'react';
-import { FilePond, FileProps, registerPlugin } from 'react-filepond';
+import React, { useRef } from "react";
+import { FilePond, registerPlugin, File } from "react-filepond";
 
-// @ts-ignore - todo declare module 
-import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation';
+// @ts-ignore - todo declare module
+import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 
 // @ts-ignore
-import FilePondPluginImagePreview from 'filepond-plugin-image-preview';
-import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css';
+import FilePondPluginImagePreview from "filepond-plugin-image-preview";
+import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 
-export interface File extends FileProps {
-  source: string;
-  options: {
-    type: string;
-  };
+interface FileUploadProps {
+  readonly name: string;
+  // readonly size: number;
 }
 
-export type FileUploadProps = { 
-  pond: string
-};
-
-export function FileUpload() {
-  const [files, setFiles] = React.useState<File[]>([]);
+export function FileUpload(props: FileUploadProps) {
+  const [files, setFiles] = React.useState<FileUploadProps[]>([]);
 
   const handleInit = () => {
-    console.log('testing');
+    console.log("FilePond instance has initialised", pondRef);
   };
 
   const pondRef = useRef(null);
@@ -33,14 +27,16 @@ export function FileUpload() {
   return (
     <FilePond
       ref={pondRef}
-      // files={files}
+      files={files}
       allowMultiple={true}
-      maxFiles={3}
+      maxFiles={6}
       server="/api"
       oninit={() => handleInit()}
-      // onupdatefiles={(fileItems: File[]) =>
-      //   setFiles(fileItems.map((fileItem: File) => fileItem.file))
-      // }
+      onupdatefiles={(fileItems: FileUploadProps[]) =>
+        setFiles(
+          fileItems.map((fileItem: FileUploadProps) => fileItem.file.name)
+        )
+      }
     />
   );
 }
